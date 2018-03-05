@@ -42,20 +42,25 @@ def login():
             users = db.session.query(UserProfile).filter_by(username=user, password=pw).all()
             
             if users:
-                    
                 # using your model, query database for a user based on the username
                 # and password submitted
                 # store the result of that query to a `user` variable so it can be
                 # passed to the login_user() method.
     
                 # get user id, load into session
-                login_user(users[0].id)
+                login_user(users[0])
                 flash('You were successfully logged in')
                 # remember to flash a message to the user
                 return redirect(url_for("secure_page"))  # they should be redirected to a secure-page route instead
     return render_template("login.html", form=form)
 
 
+@app.route("/secure-page")
+@login_required
+def secure_page():
+    return render_template("secure_page.html")
+    
+    
 # user_loader callback. This callback is used to reload the user object from
 # the user ID stored in the session
 @login_manager.user_loader
